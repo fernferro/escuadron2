@@ -457,15 +457,113 @@ static std::string carpeta_fotos() {   /* donde el juego guarda las fotos F12 (r
     return unir(s_datos, "capturas");
 }
 
+/* ---- armar el juego la primera vez (herramientas/armar/armar.py) --------------------------
+ * El paquete no trae nada del juego: con el disco del usuario se traduce y se compila
+ * escuadron2.exe en su PC. Queda al lado del launcher (o en la carpeta de datos si esa no se
+ * puede escribir). */
+#ifdef _WIN32
+static const char* k_exe_juego = "escuadron2.exe";
+#else
+static const char* k_exe_juego = "escuadron2";
+#endif
+static std::string carpeta_juego() {   /* donde se arma el juego */
+    return s_datos == s_exe_dir ? s_exe_dir : unir(s_datos, "juego");
+}
+static std::string exe_juego() {
+    std::string a = unir(s_exe_dir, k_exe_juego);
+    if (existe(a)) return a;
+    return unir(unir(s_datos, "juego"), k_exe_juego);
+}
+static bool hay_armador() { return existe(unir(unir(unir(s_exe_dir, "herramientas"), "armar"), "armar.py")); }
+static bool falta_armar() { return !existe(exe_juego()) && hay_armador(); }
+
+static struct {
+    bool activo = false, listo = false, error = false;
+    std::string paso, mensaje, ultimas;
+    int avance = 0;
+    Uint32 t0 = 0;
+    SDL_mutex* m = nullptr;
+} s_arm;
+
+static void arm_linea(const std::string& l) {
+    SDL_LockMutex(s_arm.m);
+    if (l.rfind("PASO ", 0) == 0) s_arm.paso = l.substr(5);
+    else if (l.rfind("AVANCE ", 0) == 0) s_arm.avance = atoi(l.c_str() + 7);
+    else if (l.rfind("ERROR ", 0) == 0) s_arm.mensaje = l.substr(6);
+    else if (!l.empty()) { s_arm.ultimas += l + "\n"; if (s_arm.ultimas.size() > 4000) s_arm.ultimas.erase(0, s_arm.ultimas.size() - 4000); }
+    SDL_UnlockMutex(s_arm.m);
+}
+
+static int arm_hilo(void*) {
+    std::string h = unir(s_exe_dir, "herramientas");
+    std::string salida = carpeta_juego();
+    MKDIR(salida.c_str());
+    std::string reg = unir(s_datos, "armado_log.txt");
+    FILE* lg = fopen(reg.c_str(), "w");
+    bool ok = false;
+#ifdef _WIN32
+    std::string py = unir(unir(h, "python"), "python.exe");
+    std::string cmd = comillas(py) + " -I " + comillas(unir(unir(h, "armar"), "armar.py")) + " --iso " + comillas(s_cfg.iso) +
+                      " --salida " + comillas(salida) + " --trabajo " + comillas(unir(s_datos, "armado"));
+    SECURITY_ATTRIBUTES sa = { sizeof sa, NULL, TRUE };
+    HANDLE rd, wr;
+    if (CreatePipe(&rd, &wr, &sa, 0)) {
+        SetHandleInformation(rd, HANDLE_FLAG_INHERIT, 0);
+        STARTUPINFOA si; PROCESS_INFORMATION pi;
+        memset(&si, 0, sizeof si); si.cb = sizeof si;
+        si.dwFlags = STARTF_USESTDHANDLES; si.hStdOutput = wr; si.hStdError = wr; si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+        std::vector<char> c(cmd.begin(), cmd.end()); c.push_back(0);
+        if (CreateProcessA(py.c_str(), c.data(), NULL, NULL, TRUE, CREATE_NO_WINDOW | BELOW_NORMAL_PRIORITY_CLASS, NULL, s_datos.c_str(), &si, &pi)) {
+            CloseHandle(wr); wr = NULL;
+            char buf[4096]; DWORD n; std::string l;
+            while (ReadFile(rd, buf, sizeof buf, &n, NULL) && n) {
+                if (lg) { fwrite(buf, 1, n, lg); fflush(lg); }
+                for (DWORD i = 0; i < n; i++) { if (buf[i] == '\n') { arm_linea(l); l.clear(); } else if (buf[i] != '\r') l += buf[i]; }
+            }
+            WaitForSingleObject(pi.hProcess, INFINITE);
+            DWORD code = 1; GetExitCodeProcess(pi.hProcess, &code);
+            CloseHandle(pi.hProcess); CloseHandle(pi.hThread);
+            ok = code == 0;
+        } else arm_linea("ERROR Could not start the bundled Python (herramientas\\python\\python.exe).");
+        if (wr) CloseHandle(wr);
+        CloseHandle(rd);
+    }
+#else
+    std::string cmd = "python3 -I " + comillas(unir(unir(h, "armar"), "armar.py")) + " --iso " + comillas(s_cfg.iso) +
+                      " --salida " + comillas(salida) + " --trabajo " + comillas(unir(s_datos, "armado")) + " 2>&1";
+    FILE* p = popen(cmd.c_str(), "r");
+    if (p) {
+        char buf[4096];
+        while (fgets(buf, sizeof buf, p)) {
+            if (lg) { fputs(buf, lg); fflush(lg); }
+            std::string l = buf; while (!l.empty() && (l.back() == '\n' || l.back() == '\r')) l.pop_back();
+            arm_linea(l);
+        }
+        ok = pclose(p) == 0;
+    }
+#endif
+    if (lg) fclose(lg);
+    SDL_LockMutex(s_arm.m);
+    s_arm.activo = false;
+    s_arm.listo = ok && existe(exe_juego());
+    s_arm.error = !s_arm.listo;
+    if (s_arm.error && s_arm.mensaje.empty()) s_arm.mensaje = "Something went wrong while preparing the game. Details in armado_log.txt (System tab > Launcher data).";
+    SDL_UnlockMutex(s_arm.m);
+    return 0;
+}
+
+static void arm_empezar() {
+    if (s_arm.activo) return;
+    if (!s_arm.m) s_arm.m = SDL_CreateMutex();
+    s_arm.activo = true; s_arm.listo = false; s_arm.error = false;
+    s_arm.paso = "Starting"; s_arm.mensaje.clear(); s_arm.ultimas.clear(); s_arm.avance = 0;
+    s_arm.t0 = SDL_GetTicks();
+    SDL_DetachThread(SDL_CreateThread(arm_hilo, "armar", NULL));
+}
+
 static bool lanzar() {
     std::vector<std::string> a;
-    std::string exe = unir(s_exe_dir,
-#ifdef _WIN32
-        "escuadron2.exe"
-#else
-        "escuadron2"
-#endif
-    );
+    std::string exe = exe_juego();
     std::string tarjeta = unir(carpeta_tarjetas(), s_cfg.tarjeta);
     a.push_back("--iso"); a.push_back(s_cfg.iso);
     a.push_back("--memcard"); a.push_back(tarjeta);
@@ -698,10 +796,42 @@ static void pest_jugar(ImVec2 org, ImVec2 tam, float t) {
         ImGui::EndDisabled();
     } else if (!s_disco.ok) {
         if (boton_naranja("Choose disc", ImVec2(180, 58))) elegir_disco();
+    } else if (s_arm.activo) {
+        ImGui::BeginDisabled();
+        ImGui::Button("Preparing...", ImVec2(180, 58));
+        ImGui::EndDisabled();
+    } else if (falta_armar()) {
+        if (boton_naranja("Prepare game", ImVec2(180, 58))) arm_empezar();
     } else if (boton_naranja("Play", ImVec2(180, 58))) {
         if (!lanzar()) avisar("Could not start the game: escuadron2 is missing next to the launcher.");
     }
     ImGui::PopFont();
+    if (s_arm.activo || s_arm.error || (s_disco.ok && falta_armar())) {   /* panel del armado */
+        float w = 560, x = org.x + tam.x - 52 - w, y = org.y + tam.y - 150 - 150;
+        dl->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + 132), IM_COL32(12, 20, 44, 235), 12);
+        std::string paso, msj; int av;
+        if (s_arm.m) SDL_LockMutex(s_arm.m);
+        paso = s_arm.paso; msj = s_arm.mensaje; av = s_arm.avance;
+        if (s_arm.m) SDL_UnlockMutex(s_arm.m);
+        if (s_arm.activo) {
+            char t[200];
+            Uint32 seg = (SDL_GetTicks() - s_arm.t0) / 1000;
+            snprintf(t, sizeof t, "Preparing the game from your disc (first time only)  -  %u:%02u", seg / 60, seg % 60);
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 14), C_ACENTO, t);
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 44), IM_COL32(235, 235, 240, 255), paso.c_str());
+            dl->AddRectFilled(ImVec2(x + 16, y + 84), ImVec2(x + w - 16, y + 100), IM_COL32(40, 50, 80, 255), 8);
+            dl->AddRectFilled(ImVec2(x + 16, y + 84), ImVec2(x + 16 + (w - 32) * av / 100.0f, y + 100), IM_COL32(255, 212, 38, 255), 8);
+            char pc[16]; snprintf(pc, sizeof pc, "%d%%", av);
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + w - 60, y + 104), C_TENUE, pc);
+        } else if (s_arm.error) {
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 14), IM_COL32(255, 150, 130, 255), "Could not prepare the game");
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 44), IM_COL32(235, 235, 240, 255), msj.c_str(), NULL, w - 32);
+        } else {
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 14), C_ACENTO, "One more step");
+            dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 44), IM_COL32(235, 235, 240, 255),
+                        "The first time, the launcher builds the game from your own disc. It takes a few minutes and only happens once. Press Prepare game.", NULL, w - 32);
+        }
+    }
     if (!s_disco.ok || !s_disco.error.empty()) {
         const char* m = s_disco.ok ? s_disco.error.c_str() : s_cfg.iso.empty() ?
             "To play you need your own copy of the game: choose the disc image (.iso or .gcm)." : s_disco.error.c_str();

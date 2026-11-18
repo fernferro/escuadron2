@@ -7,10 +7,14 @@ hecho por recompilacion del programa original del juego.
 NO incluye ningun archivo del juego. Para jugar necesitas tu propia copia: la imagen del disco
 (.iso o .gcm, sin comprimir) sacada de tu propio disco.
 
-COMO JUGAR
-  1. Abri "Escuadron2" (Escuadron2.exe).
-  2. Elegi tu imagen del disco (o arrastrala sobre la ventana).
-  3. Toca "Jugar".
+COMO JUGAR / HOW TO PLAY
+  1. Abri Escuadron2.exe.                         Open Escuadron2.exe.
+  2. Elegi la imagen de tu disco (GSWE64).        Choose your disc image (GSWE64).
+  3. La primera vez toca "Prepare game": arma     The first time press "Prepare game": it builds
+     el juego a partir de TU disco, con el           the game from YOUR disc with the bundled
+     compilador que viene en herramientas\          compiler in herramientas\ (a few minutes,
+     (unos minutos, una sola vez).                   only once).
+  4. Toca "Play".                                 Press "Play".
 
 DONDE QUEDAN TUS COSAS
   En la carpeta del programa (o en %APPDATA%\Escuadron2 si esta instalado en Archivos de programa):

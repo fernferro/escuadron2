@@ -8,6 +8,16 @@
 > Este proyecto no está relacionado con los dueños del juego, de sus marcas ni de la consola, ni
 > tiene su respaldo. Los nombres y marcas del juego original pertenecen a sus dueños.
 
+## Jugar (Windows)
+
+1. Bajá el zip del último [release](../../releases) y descomprimilo en una carpeta tuya
+   (por ejemplo `C:\Escuadron2`; no en "Archivos de programa").
+2. Abrí `Escuadron2.exe`, elegí la imagen de **tu** disco (`.iso` / `.gcm` sin comprimir) y tocá
+   **Prepare game**. La primera vez el launcher traduce y compila el juego **en tu PC**, a partir
+   de tu disco, con el compilador y el Python portables que vienen en `herramientas\`
+   (unos minutos, una sola vez). Nada del juego viene en el zip.
+3. Tocá **Play**.
+
 ## Cómo funciona
 
 - **Recompilación estática:** `port/recomp/recomp.py` traduce el código PowerPC de **tu** `main.dol`

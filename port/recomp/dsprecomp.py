@@ -76,6 +76,8 @@ def _escritores_de_banderas():
     """Instrucciones que calculan las banderas de comparacion (UpdateSR16/64) en dsp_ops.h."""
     import re
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dsp_nativo', 'dsp_ops.h')
+    if not os.path.exists(path):   # en el paquete del armador: herramientas/armar/include
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'include', 'dsp_ops.h')
     src = open(path).read()
     out = set()
     for m in re.finditer(r'DSPI void op_(\w+)\(u16 opc, u16 imm_, int fl\)\n\{(.*?)\n\}', src, re.S):
