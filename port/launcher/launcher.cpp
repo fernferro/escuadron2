@@ -48,7 +48,7 @@
 
 #include "fuentes.inc"   /* Poppins (OFL) incrustada: k_poppins_regular, k_poppins_medium, k_poppins_bold */
 
-#define VERSION_LAUNCHER "0.1.0"
+#define VERSION_LAUNCHER "1.1"
 
 /* ---- utilidades ---------------------------------------------------------------- */
 
@@ -760,13 +760,7 @@ static void pest_jugar(ImVec2 org, ImVec2 tam, float t) {
         if (n > 1 && f > dur - fun) dibujar_cubrir(dl, s_fondos[(i + 1) % n], org, fin, (int)(255 * (f - (dur - fun)) / fun));
         velo(dl, org, fin);
     } else {
-        fondo_estrellas(dl, org, fin, t);
-        if (s_disco.banner) {   /* banner del disco, grande, al centro */
-            float bw = std::min(tam.x * 0.55f, 96.0f * 7), bh = bw / 3;
-            ImVec2 c(org.x + tam.x * 0.5f, org.y + tam.y * 0.40f);
-            dl->AddRectFilled(ImVec2(c.x - bw / 2 - 10, c.y - bh / 2 - 10), ImVec2(c.x + bw / 2 + 10, c.y + bh / 2 + 10), IM_COL32(0, 0, 0, 120), 16);
-            dl->AddImage((ImTextureID)(intptr_t)s_disco.banner, ImVec2(c.x - bw / 2, c.y - bh / 2), ImVec2(c.x + bw / 2, c.y + bh / 2));
-        }
+        fondo_estrellas(dl, org, fin, t);   /* sin el banner del disco: el launcher no muestra nada del juego */
     }
     /* portada y titulo abajo a la izquierda */
     float x0 = org.x + 52, y0 = org.y + tam.y - 150;
