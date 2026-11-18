@@ -796,10 +796,22 @@ static void pest_jugar(ImVec2 org, ImVec2 tam, float t) {
         ImGui::EndDisabled();
     } else if (falta_armar()) {
         if (boton_naranja("Prepare game", ImVec2(180, 58))) arm_empezar();
+    } else if (!existe(exe_juego())) {
+        ImGui::BeginDisabled();
+        ImGui::Button("Play", ImVec2(180, 58));
+        ImGui::EndDisabled();
     } else if (boton_naranja("Play", ImVec2(180, 58))) {
         if (!lanzar()) avisar("Could not start the game: escuadron2 is missing next to the launcher.");
     }
     ImGui::PopFont();
+    if (!s_jugando && !s_arm.activo && !existe(exe_juego()) && !hay_armador()) {   /* zip sin descomprimir entero */
+        float w = 560, x = org.x + tam.x - 52 - w, y = org.y + tam.y - 150 - 150;
+        dl->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + 132), IM_COL32(12, 20, 44, 235), 12);
+        dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 14), IM_COL32(255, 150, 130, 255), "The herramientas folder is missing");
+        std::string m = "Extract the WHOLE zip to a folder of your own (right click > Extract All) and open Escuadron2.exe from there. "
+                        "The herramientas folder must be next to it. Now running from: " + s_exe_dir;
+        dl->AddText(s_f_normal, s_f_normal->LegacySize, ImVec2(x + 16, y + 44), IM_COL32(235, 235, 240, 255), m.c_str(), NULL, w - 32);
+    } else
     if (s_arm.activo || s_arm.error || (s_disco.ok && falta_armar())) {   /* panel del armado */
         float w = 560, x = org.x + tam.x - 52 - w, y = org.y + tam.y - 150 - 150;
         dl->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + 132), IM_COL32(12, 20, 44, 235), 12);
