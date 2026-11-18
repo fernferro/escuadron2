@@ -4,7 +4,7 @@
 #   Escuadron2/herramientas/armar/        armar.py, los traductores, el runtime ya compilado (obj/), SDL2
 #   Escuadron2/herramientas/clang/        llvm-mingw recortado (compila el juego traducido en la PC del usuario)
 #   Escuadron2/herramientas/python/       Python portable (python-build-standalone)
-# Uso: port/armador/paquete.sh SALIDA.zip   (antes: make TARGET=win ... escuadron2.exe y launcher)
+# Uso: port/armador/paquete.sh SALIDA.zip   (antes: make TARGET=win ... escuadron2_game.exe y launcher)
 # Variables: WINHOST (llvm-mingw para Windows descomprimido), PYWIN (python-build-standalone),
 #            MINGW y SDL2_WIN (los mismos del Makefile).
 set -e

@@ -17,7 +17,7 @@ A medida que el decomp avance, se pueden reemplazar funciones recompiladas por l
 versiones en C del decomp (o por implementaciones nativas, "HLE").
 
 ```
-main.dol + rogue2vm.dol ──recomp.py──► build/port/gen/*.c ──gcc──► build/port/escuadron2
+main.dol + rogue2vm.dol ──recomp.py──► build/port/gen/*.c ──gcc──► build/port/escuadron2_game
                                               ▲
                      port/runtime/*.c ────────┘ (memoria, SO, hardware, GX, video)
 ```
@@ -39,7 +39,7 @@ Linux (con SDL2 para la ventana; sin SDL2 queda solo el rasterizador por softwar
 ```sh
 make -C port -j4                       # o SDL2_DIR=/ruta/a/sdl2 si no esta instalado
 ./build/port/test_recomp               # pruebas del recompilador (6/6)
-./build/port/escuadron2 --game CARPETA     # CARPETA/sys/main.dol y CARPETA/Rogue2/...
+./build/port/escuadron2_game --game CARPETA     # CARPETA/sys/main.dol y CARPETA/Rogue2/...
 ```
 
 Windows (compilacion cruzada desde Linux, como se hizo en la sesion de Claude):
@@ -47,7 +47,7 @@ Windows (compilacion cruzada desde Linux, como se hizo en la sesion de Claude):
 ```sh
 # llvm-mingw (github.com/mstorsjo/llvm-mingw) y SDL2-devel-2.30.x-mingw (github.com/libsdl-org/SDL)
 make -C port -j4 TARGET=win MINGW=/ruta/llvm-mingw-...-x86_64 SDL2_WIN=/ruta/SDL2-2.30.x/x86_64-w64-mingw32
-llvm-strip -o escuadron2.exe build/port-win/escuadron2.exe
+llvm-strip -o escuadron2_game.exe build/port-win/escuadron2_game.exe
 ```
 
 El .exe sale estatico (solo usa DLL del sistema). Contiene codigo del juego recompilado:
@@ -139,7 +139,7 @@ fatal. `sh port/run_debug.sh` corre N segundos y saca la pila de todos los hilos
   `instalador.jpg` (fondo del instalador). Sin arte se ve el fondo de estrellas.
 - Pruebas sin ventana: `RL_LAUNCHER_CAPTURAS=DIR` / `RL_INSTALADOR_CAPTURAS=DIR` guardan una imagen
   de cada pestana / paso; `RL_INSTALADOR_AUTO=DIR` instala ahi sin preguntar.
-- `escuadron2.exe` lleva el interprete del DSP de Dolphin (GPL-2.0+): el instalador incluye `port/dsp/COPYING`.
+- `escuadron2_game.exe` lleva el interprete del DSP de Dolphin (GPL-2.0+): el instalador incluye `port/dsp/COPYING`.
 
 ## Opciones: launcher y menu dentro del juego (noviembre 2026)
 
@@ -189,7 +189,7 @@ cada proyeccion distinta (util con `--reproducir` de una captura).
 
 `RL_VIGILAR=DIR,LARGO[,r]` (+ `RL_VIGILAR_DESDE=cuadro`, solo Linux) anota que codigo del juego
 escribe (o lee, con `r`) esa memoria: protege la pagina y anota cada instruccion que la toca
-(`[vigilar] +desplazamiento`; con `nm -n build/port/escuadron2` se ve la funcion `f_...`). Asi se
+(`[vigilar] +desplazamiento`; con `nm -n build/port/escuadron2_game` se ve la funcion `f_...`). Asi se
 encontro `fn_7FC14CEC`.
 
 ### Shaders al arrancar (por defecto)
@@ -347,8 +347,8 @@ texturas volcadas y tenidas: se reemplazan bien. Falta probar con un paquete rea
   llamadas a OpenGL, MHz del DSP y **ms de CPU por cuadro de cada parte** (juego = todos los
   hilos del juego, grafico = hilo de GX + OpenGL, DSP) y ns por ciclo del DSP.
 - `RL_PROF=1` (Linux): perfilador por muestreo; `RL_PROF_DESDE=N` empieza en el cuadro N.
-  `python3 port/tools/prof.py build/port/escuadron2 build/prof.raw` resume por hilo y funcion.
-- `RL_REPLAY_LOOPS=N ./build/port/escuadron2 --reproducir CAPTURA.gxc salida.png` repite un cuadro
+  `python3 port/tools/prof.py build/port/escuadron2_game build/prof.raw` resume por hilo y funcion.
+- `RL_REPLAY_LOOPS=N ./build/port/escuadron2_game --reproducir CAPTURA.gxc salida.png` repite un cuadro
   capturado (`--capturar N`) N veces y da los ms por cuadro del hilo grafico.
 - Lo que ya se hizo: la transformacion de vertices va en la GPU (`VS_XF` en `render_gl.c`, el
   estado de XF de cada dibujo en un buffer de texturas; `RL_GL_XF=0` vuelve a la CPU), los
@@ -378,7 +378,7 @@ Arreglado en esta etapa (octubre 2026, segunda sesion):
 
 Tercera sesion: DSP con JIT, hilo grafico ~30% mas liviano (cache de formatos de vertice,
 hash por muestras en texturas grandes), escrituras al tubo de GX mas rapidas, vibracion del
-joystick, `escuadron2.ini`, y en Windows una caida deja `[caida] ... escuadron2.exe+0x...` en el registro.
+joystick, `escuadron2.ini`, y en Windows una caida deja `[caida] ... escuadron2_game.exe+0x...` en el registro.
 En la maquina de pruebas (2 nucleos, sin placa de video) el nivel 3 va a ~58 cuadros/s sin dibujar.
 
 Cuarta sesion: la intro ya no se traba en Windows (los avisos de "fin de dibujo" del PE van

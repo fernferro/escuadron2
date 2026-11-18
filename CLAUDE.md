@@ -28,7 +28,7 @@ ninja                                               # debe terminar en "COINCIDE
 
 - Leer **`docs/port.md`**: recompilación estática PPC→C (`port/recomp/recomp.py`) + runtime que
   emula la GameCube (`port/runtime/`). Compilar con `make -C port -j4`; correr
-  `./build/port/escuadron2 --frames 1500 --dump build/frames --every 100 --pad "650:A,1000:D,1060:D,1120:A"`.
+  `./build/port/escuadron2_game --frames 1500 --dump build/frames --every 100 --pad "650:A,1000:D,1060:D,1120:A"`.
 - Necesita además los **datos del disco** en `build/disc/Rogue2/` (data.dat, data.dir, resource.inf,
   dg00020.vsp, lvlPack00..06.dir/.dat). Pedírselos al usuario si faltan (Dolphin → Extraer archivos).
 - `docs/port.md` tiene la lista de lo que falta, en orden. Actualizarla al terminar cada parte.

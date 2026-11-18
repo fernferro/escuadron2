@@ -11,7 +11,7 @@ BEGIN
       VALUE "FileDescription", "Escuadron2 (port a PC)"
       VALUE "ProductName", "Escuadron2"
       VALUE "FileVersion", "0.1.0"
-      VALUE "OriginalFilename", "escuadron2.exe"
+      VALUE "OriginalFilename", "escuadron2_game.exe"
     END
   END
   BLOCK "VarFileInfo"

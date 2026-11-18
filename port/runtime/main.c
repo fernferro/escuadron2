@@ -26,7 +26,7 @@ static LONG WINAPI win_crash(EXCEPTION_POINTERS* ep) {
     HMODULE base = GetModuleHandleA(NULL);
     uintptr_t at = (uintptr_t)ep->ExceptionRecord->ExceptionAddress;
     if (rt_log_file) {
-        fprintf(rt_log_file, "\n[caida] excepcion %08lX en %p (escuadron2.exe+0x%llX)\n", (unsigned long)ep->ExceptionRecord->ExceptionCode,
+        fprintf(rt_log_file, "\n[caida] excepcion %08lX en %p (escuadron2_game.exe+0x%llX)\n", (unsigned long)ep->ExceptionRecord->ExceptionCode,
                 (void*)at, (unsigned long long)(at - (uintptr_t)base));
         if (ep->ExceptionRecord->NumberParameters >= 2)
             fprintf(rt_log_file, "[caida] acceso %s a %p\n", ep->ExceptionRecord->ExceptionInformation[0] ? "de escritura" : "de lectura",

@@ -459,12 +459,12 @@ static std::string carpeta_fotos() {   /* donde el juego guarda las fotos F12 (r
 
 /* ---- armar el juego la primera vez (herramientas/armar/armar.py) --------------------------
  * El paquete no trae nada del juego: con el disco del usuario se traduce y se compila
- * escuadron2.exe en su PC. Queda al lado del launcher (o en la carpeta de datos si esa no se
+ * escuadron2_game.exe en su PC. Queda al lado del launcher (o en la carpeta de datos si esa no se
  * puede escribir). */
 #ifdef _WIN32
-static const char* k_exe_juego = "escuadron2.exe";
+static const char* k_exe_juego = "escuadron2_game.exe";
 #else
-static const char* k_exe_juego = "escuadron2";
+static const char* k_exe_juego = "escuadron2_game";
 #endif
 static std::string carpeta_juego() {   /* donde se arma el juego */
     return s_datos == s_exe_dir ? s_exe_dir : unir(s_datos, "juego");
@@ -1287,7 +1287,7 @@ static void carpetas() {
         std::string appdata = SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, p) == S_OK ? unir(p, "Escuadron2") : unir(s_exe_dir, "datos");
         /* Modo portatil: si la carpeta del launcher se puede escribir (no es Archivos de programa),
          * todo (registro, opciones, tarjetas, cache de shaders) queda ahi mismo, igual que abriendo
-         * escuadron2.exe directo. La primera vez se traen las cosas que habia en %APPDATA%\Escuadron2. */
+         * escuadron2_game.exe directo. La primera vez se traen las cosas que habia en %APPDATA%\Escuadron2. */
         std::string prueba = unir(s_exe_dir, "rl_prueba_escritura.tmp");
         FILE* f = fopen(prueba.c_str(), "wb");
         if (f) {

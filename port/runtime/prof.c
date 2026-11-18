@@ -1,7 +1,7 @@
 /*
  * Perfilador por muestreo (solo Linux): RL_PROF=1 toma una muestra del contador de
  * programa cada 1 ms de CPU (de cualquier hilo) y al salir escribe build/prof.raw.
- * Analizar con: python3 port/tools/prof.py build/port/escuadron2 build/prof.raw
+ * Analizar con: python3 port/tools/prof.py build/port/escuadron2_game build/prof.raw
  */
 #if defined(__linux__) && defined(__x86_64__)
 #define _GNU_SOURCE

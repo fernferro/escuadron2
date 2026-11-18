@@ -1005,7 +1005,7 @@ int main(int argc, char** argv) {
             s_paso = k_capt[i];
             s_desinstalar = s_paso == E_DESINST;
             if (s_paso == E_DESINST) s_dir_desinst = s_carpeta;
-            if (s_paso == E_TRABAJANDO) { SDL_AtomicSet(&s_hecho, (int)((s_total ? s_total : 150u << 20) * 0.62 / 1024)); if (!s_total) s_total = 150u << 20; poner_actual("escuadron2.exe"); }
+            if (s_paso == E_TRABAJANDO) { SDL_AtomicSet(&s_hecho, (int)((s_total ? s_total : 150u << 20) * 0.62 / 1024)); if (!s_total) s_total = 150u << 20; poner_actual("escuadron2_game.exe"); }
         }
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();

@@ -39,7 +39,7 @@ compila desde Linux con [llvm-mingw](https://github.com/mstorsjo/llvm-mingw).
 
 ```sh
 python tools/setup_rl.py RUTA/A/TU/sys/main.dol   # verifica el SHA-1 y prepara orig/GSWE64/
-make -C port -j4                                  # traduce tu main.dol y compila build/port/escuadron2
+make -C port -j4                                  # traduce tu main.dol y compila build/port/escuadron2_game
 make -C port launcher                             # el launcher (Escuadron2)
 ```
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Armador de Escuadron2: arma escuadron2.exe en la PC del usuario a partir de SU disco.
+"""Armador de Escuadron2: arma escuadron2_game.exe en la PC del usuario a partir de SU disco.
 
 El paquete que se publica no lleva nada del juego. La primera vez, el launcher corre esto:
 
@@ -83,7 +83,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--iso", help="imagen del disco (.iso / .gcm)")
     ap.add_argument("--dol", help="o directamente sys/main.dol (extraido con Dolphin)")
-    ap.add_argument("--salida", required=True, help="carpeta donde queda escuadron2.exe")
+    ap.add_argument("--salida", required=True, help="carpeta donde queda escuadron2_game.exe")
     ap.add_argument("--trabajo", help="carpeta temporal (por defecto SALIDA/armado)")
     ap.add_argument("--hilos", type=int, default=0)
     ap.add_argument("--clang", help="carpeta de llvm-mingw (por defecto ../clang)")
@@ -171,10 +171,10 @@ def main():
             "-loleaut32", "-lgdi32", "-luser32", "-lshell32", "-lcfgmgr32", "-luuid", "-ladvapi32", "-lopengl32",
             "-lm", "-lpthread"]
     os.makedirs(a.salida, exist_ok=True)
-    tmp = os.path.join(trab, "escuadron2" + ".exe")
+    tmp = os.path.join(trab, "escuadron2_game.exe")
     correr([cxx, "-static", "-Wl,--stack,67108864", "-o", tmp, "-Wl,--start-group"] + pre + objs + libs + ["-Wl,--end-group"])
     correr([strip, tmp])
-    final = os.path.join(a.salida, "escuadron2.exe")
+    final = os.path.join(a.salida, "escuadron2_game.exe")
     shutil.move(tmp, final)
     with open(os.path.join(a.salida, "escuadron2.armado"), "w") as f:
         f.write("armador %s\nsha1 %s\n" % (VERSION_ARMADOR, SHA1_MAIN))

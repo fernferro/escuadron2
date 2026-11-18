@@ -3,7 +3,7 @@
 #   sh port/run_debug.sh [segundos] [opciones de escuadron2...]
 SECS=${1:-10}; shift
 make -C port -j2 >/dev/null 2>build/make.err || { tail -20 build/make.err; exit 1; }
-./build/port/escuadron2 "$@" > build/run.out 2> build/run.err &
+./build/port/escuadron2_game "$@" > build/run.out 2> build/run.err &
 PID=$!
 sleep "$SECS"
 if kill -0 $PID 2>/dev/null; then

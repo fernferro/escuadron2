@@ -31,6 +31,6 @@ SI ALGO ANDA MAL
   Manda el archivo escuadron2_log.txt (pestana Registros del launcher) y, si se ve raro, una captura F12.
 
 LICENCIAS (carpeta licencias)
-  El juego usa el interprete del DSP de Dolphin (GPL-2.0 o posterior), por eso escuadron2.exe se
+  El juego usa el interprete del DSP de Dolphin (GPL-2.0 o posterior), por eso escuadron2_game.exe se
   distribuye bajo la GPL-2.0. SDL2 y zlib (licencia zlib), Dear ImGui (MIT), fuente Poppins (OFL).
   Los nombres y marcas del juego original son de sus duenos; este proyecto no tiene relacion con ellos.

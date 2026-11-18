@@ -4,7 +4,7 @@
 #                                        (sdl2-config) se compila con ventana y OpenGL.
 #   make -C port SDL2_DIR=/ruta          SDL2 instalado en otra carpeta
 #   make -C port TARGET=win MINGW=/ruta/llvm-mingw SDL2_WIN=/ruta/SDL2-x.y.z/x86_64-w64-mingw32
-#                                        escuadron2.exe para Windows (compilacion cruzada; ver docs/port.md)
+#                                        escuadron2_game.exe para Windows (compilacion cruzada; ver docs/port.md)
 #
 # Requiere orig/GSWE64/combined.dol (python tools/setup_rl.py ...) para generar el codigo.
 ROOT    := $(abspath ..)
@@ -42,7 +42,7 @@ endif
 OBJ     := $(OUT)/obj
 .DEFAULT_GOAL := all
 ifeq ($(TARGET),win)
-JUEGO_RES := $(OBJ)/juego_rc.o   # icono y version de escuadron2.exe
+JUEGO_RES := $(OBJ)/juego_rc.o   # icono y version de escuadron2_game.exe
 $(OBJ)/juego_rc.o: $(ROOT)/port/launcher/juego.rc $(ROOT)/port/launcher/icono.ico
 	@mkdir -p $(OBJ)
 	$(MINGW)/bin/x86_64-w64-mingw32-windres -I$(ROOT)/port/launcher $< -o $@
@@ -99,7 +99,7 @@ $(OBJ)/dsp/dsp_rom_data.o: $(DSPDIR)/dsp_rom_data.c
 	@mkdir -p $(dir $@)
 	$(CC) -O1 -c $< -o $@
 
-all: $(OUT)/test_recomp$(EXE) $(OUT)/escuadron2$(EXE)
+all: $(OUT)/test_recomp$(EXE) $(OUT)/escuadron2_game$(EXE)
 
 $(GEN)/stamp: $(ROOT)/port/recomp/recomp.py $(ROOT)/config/GSWE64/symbols.txt $(wildcard $(ROOT)/port/hle.txt)
 	$(PY) -I $(ROOT)/port/recomp/recomp.py $(ROOT)/orig/GSWE64/combined.dol $(ROOT)/config/GSWE64/symbols.txt $(GEN) \
@@ -127,11 +127,11 @@ $(OBJ)/main.o: $(ROOT)/port/runtime/main.c $(wildcard $(ROOT)/port/runtime/*.h) 
 
 gen: $(GEN)/stamp
 
-$(OUT)/test_recomp$(EXE): gen $(OUT)/escuadron2$(EXE)
+$(OUT)/test_recomp$(EXE): gen $(OUT)/escuadron2_game$(EXE)
 	$(MAKE) $(OBJ)/test_recomp.o $(RT_OBJS) $(GEN_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJ)/test_recomp.o $(RT_OBJS) $(GEN_OBJS) $(LIBS) -lm -lpthread
 
-$(OUT)/escuadron2$(EXE): gen
+$(OUT)/escuadron2_game$(EXE): gen
 	$(MAKE) $(OBJ)/main.o $(RT_OBJS) $(GEN_OBJS) $(JUEGO_RES)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJ)/main.o $(RT_OBJS) $(GEN_OBJS) $(JUEGO_RES) $(LIBS) -lm -lpthread
 
@@ -199,15 +199,15 @@ $(OUT)/instalador_programa$(EXE): $(INST_OBJS) $(LNC_RES)
 	$(CXX) $(LDFLAGS) -s -o $@ $^ $(INST_LIBS)
 
 # archivos que se instalan (destino=origen); el juego va sin informacion de depuracion
-INST_ARCH = escuadron2$(EXE)=$(OUT)/escuadron2_dist$(EXE) Escuadron2$(EXE)=$(OUT)/Escuadron2$(EXE) \
+INST_ARCH = escuadron2_game$(EXE)=$(OUT)/escuadron2_game_dist$(EXE) Escuadron2$(EXE)=$(OUT)/Escuadron2$(EXE) \
             LEEME.txt=$(LAUNCHER)/LEEME.txt licencias/imgui.txt=$(IMGUI)/LICENSE.txt \
             licencias/poppins_OFL.txt=$(LAUNCHER)/fuentes/OFL.txt licencias/zlib.txt=$(ZLIBDIR)/LICENSE \
             licencias/dolphin_dsp_GPL2.txt=$(DSPDIR)/COPYING licencias/SDL2.txt=$(LAUNCHER)/licencia_SDL2.txt \
             $(foreach f,$(wildcard $(ROOT)/build/arte/*),arte/$(notdir $(f))=$(f))
 # build/arte/ (opcional, fuera del repo): fondo*.jpg, portada, control, disco e instalador.jpg
-$(OUT)/escuadron2_dist$(EXE): $(OUT)/escuadron2$(EXE)
+$(OUT)/escuadron2_game_dist$(EXE): $(OUT)/escuadron2_game$(EXE)
 	$(if $(MINGW),$(MINGW)/bin/llvm-strip,strip) -o $@ $<
-$(OUT)/Instalar-Escuadron2$(EXE): $(OUT)/instalador_programa$(EXE) $(OUT)/escuadron2_dist$(EXE) $(OUT)/Escuadron2$(EXE) \
+$(OUT)/Instalar-Escuadron2$(EXE): $(OUT)/instalador_programa$(EXE) $(OUT)/escuadron2_game_dist$(EXE) $(OUT)/Escuadron2$(EXE) \
         $(ROOT)/port/tools/empaquetar_instalador.py $(LAUNCHER)/LEEME.txt $(wildcard $(ROOT)/build/arte/*)
 	$(PY) -I $(ROOT)/port/tools/empaquetar_instalador.py $< $@ $(INST_ARCH)
 
