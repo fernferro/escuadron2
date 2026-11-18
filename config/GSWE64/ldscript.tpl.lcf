@@ -1,0 +1,51 @@
+/*
+ * Escuadron2: dos regiones de memoria.
+ * El original se enlazó como un solo programa: primero el cargador (memoria
+ * principal, 0x80003100) y después el código/datos de la VM (0x7FC00000).
+ * El orden importa: así queda la tabla _rom_copy_info del arranque.
+ */
+MEMORY
+{
+    text : origin = 0x80003100
+    vm : origin = 0x7FC00000
+}
+
+SECTIONS
+{
+    GROUP:
+    {
+        .init ALIGN(0x4):{}
+        extab ALIGN(0x20):{}
+        extabindex ALIGN(0x20):{}
+        .text ALIGN(0x8):{}
+        .ctors ALIGN(0x8):{}
+        .dtors ALIGN(0x4):{}
+        .rodata ALIGN(0x20):{}
+        .data ALIGN(0x4):{}
+        .bss ALIGN(0x10):{}
+        .sdata ALIGN(0x20):{}
+        .sbss ALIGN(0x20):{}
+        .sdata2 ALIGN(0x20):{}
+        .stack ALIGN(0x100):{}
+    } > text
+
+    GROUP:
+    {
+        .vmtext ALIGN(0x20):{}
+        .vmtext2 ALIGN(0x1000):{}
+        .vmdata ALIGN(0x1000):{}
+        .vmbss ALIGN(0x1000):{}
+    } > vm
+
+    _stack_end = _f_sdata2 + SIZEOF(.sdata2);
+    _stack_addr = (_stack_end + $STACKSIZE + 0x7) & ~0x7;
+    _db_stack_addr = (_stack_addr + 0x2000);
+    _db_stack_end = _stack_addr;
+    __ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f;
+    __ArenaHi = $ARENAHI;
+}
+
+FORCEACTIVE
+{
+    $FORCEACTIVE
+}

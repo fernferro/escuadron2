@@ -1,0 +1,34 @@
+# Funciones del juego reemplazadas por el runtime (port/runtime).
+# Formato: <nombre en symbols.txt | 0xDIRECCION> [nombre de la funcion hle_]
+OSDisableInterrupts
+OSEnableInterrupts
+0x8002BC1C OSRestoreInterrupts
+0x8002E5EC SelectThread
+OSLoadContext
+OSReport
+gsysVMInit
+# Memoria virtual del juego (paginas en la ARAM): en la PC es memoria plana.
+0x8000880C gsysVMLockPage
+0x800088D8 gsysVMUnlockPage
+0x80008958 gsysVMReleaseRange
+0x80008A38 gsysVMEvictPage
+0x8000821C gsysVMPageIn
+# MusyX: microsegundos desde la interrupcion del DMA de audio. MusyX los descuenta del
+# tiempo de DSP disponible y, si se pasa, corta TODAS las voces (incluidos los streams de
+# voz, y el juego se queda esperando que terminen). En el port el DSP corre en otro hilo
+# sin la misma latencia, asi que se informa 0.
+0x80026D28 salDspLatency
+# levelLoad envuelta (se traduce igual): anota el nivel y RL_NIVEL=N lo cambia para probar.
+levelLoad levelLoad envolver
+# Terreno: fn_7FCBE5F0 recorre la grilla del terreno visible (fn_7FCBE108 da cada paso).
+# En el nivel 3 y en el nivel 4 a veces no termina nunca (el juego se congela calculando). Envueltas
+# para contar los pasos y cortar si se pasa de un limite (ver os.c, RL_TERRENO_LIMITE).
+0x7FCBE5F0 terrenoSpans envolver
+0x7FCBE108 terrenoPaso envolver
+# Decodificador de bloques del video de los mensajes de radio (transformada de 8x8, lo mas
+# pesado del hilo del juego en el nivel 6: ~30%). Se usa una copia compilada con matematica
+# relajada (rapidas.c); RL_VIDEO_EXACTO=1 usa la traduccion normal. Registro [video].
+0x80055F60 videoBloques envolver
+0x80037A9C vistaGX envolver
+0x7FCD771C camaraMira envolver
+0x7FCD812C miraBomba envolver

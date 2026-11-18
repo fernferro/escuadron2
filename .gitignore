@@ -1,0 +1,55 @@
+# IDE folders
+.idea/
+.vs/
+
+# Caches
+__pycache__
+.mypy_cache
+.cache/
+
+# Original files
+orig/*/*
+!orig/*/.gitkeep
+*.dol
+*.rel
+*.elf
+*.o
+*.map
+*.MAP
+
+# Build files
+build/
+.ninja_*
+build.ninja
+
+# decompctx output
+ctx.*
+*.ctx
+
+# Generated configs
+objdiff.json
+compile_commands.json
+
+# Miscellaneous
+/*.txt
+*.exe
+orig/*/*
+!orig/*/.gitkeep
+build/
+*.iso
+*.rvz
+*.gcm
+__pycache__/
+
+# Datos del juego que el usuario tiene en la raiz (nunca subirlos)
+/Rogue2/
+/sys/
+/files/
+*.movie
+*.vsp
+*.vdy
+lvlPack*
+data.dat
+escuadron2_shaders.cache
+capturas/
+escuadron2_shaders.usados

@@ -1,0 +1,42 @@
+# GSWE64 (EE.UU.)
+# Ver config.example.yml para documentación completa.
+object_base: orig/GSWE64
+object: combined.dol
+# Lo completa automáticamente tools/setup_rl.py a partir de tu ISO.
+hash: 4f6421ee8f85cbee1df6ae7f6db8dd03d92a14c7
+symbols: config/GSWE64/symbols.txt
+splits: config/GSWE64/splits.txt
+
+# Juego de lanzamiento (2001): probablemente CodeWarrior GC 1.x.
+# 8 = CodeWarrior for GameCube 1.0+. Ajustar si el análisis indica otra cosa.
+mw_comment_version: 8
+
+# Script de enlazado con dos regiones (cargador + VM).
+ldscript_template: config/GSWE64/ldscript.tpl.lcf
+
+# Si setup_rl.py encuentra archivos .rel en el disco, agregarlos acá:
+# modules:
+# - object: files/xxx.rel
+#   hash: ...
+#   symbols: config/GSWE64/xxx/symbols.txt
+#   splits: config/GSWE64/xxx/splits.txt
+
+# Relleno '0000' (0x30303030) entre funciones en una zona de .text:
+# el análisis lo confunde con código, así que lo salteamos.
+skip_cfa_ranges:
+- start: .text:0x80055D9C
+  end: .text:0x80055DA0
+- start: .text:0x80055E28
+  end: .text:0x80055E30
+- start: .text:0x80055EB8
+  end: .text:0x80055EC0
+- start: .text:0x80055F58
+  end: .text:0x80055F60
+- start: .text:0x80057968
+  end: .text:0x80057970
+- start: .text:0x8005937C
+  end: .text:0x80059380
+- start: .text:0x8005B3FC
+  end: .text:0x8005B400
+- start: .text:0x8005BAA8
+  end: .text:0x8005BAB0

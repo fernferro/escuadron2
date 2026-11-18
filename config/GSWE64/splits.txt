@@ -1,0 +1,33 @@
+Sections:
+	.vmtext     type:code align:32
+	.vmtext2    type:code align:4096
+	.vmdata     type:data align:4096
+	.vmbss      type:bss align:4096
+	.init       type:code align:4
+	extab       type:rodata align:32
+	extabindex  type:rodata align:32
+	.text       type:code align:8
+	.ctors      type:rodata align:8
+	.dtors      type:rodata align:4
+	.rodata     type:rodata align:32
+	.data       type:data align:4
+	.bss        type:bss align:16
+	.sdata      type:data align:32
+	.sbss       type:bss align:32
+	.sdata2     type:rodata align:32
+
+game/game_main.c:
+	.vmtext     start:0x7FC00000 end:0x7FC0232C
+
+game/game_level.c:
+	.vmtext     start:0x7FC0232C end:0x7FC02EE8
+	.vmdata     start:0x7FD9F2C8 end:0x7FD9F3C8
+	.sdata2     start:0x80096A78 end:0x80096A88
+
+game/game_legal.c:
+	.vmtext     start:0x7FC02EE8 end:0x7FC03C90
+	.vmdata     start:0x7FD9F3C8 end:0x7FD9F4D0
+	.sdata2     start:0x80096A88 end:0x80096B00
+
+gsys/gsys_resource.c:
+	.vmtext     start:0x7FC25588 end:0x7FC25CB0

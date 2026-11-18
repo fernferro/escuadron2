@@ -1,0 +1,32 @@
+ESCUADRON2 - PORT A PC
+========================
+
+Port no oficial a PC, hecho por fans, de un juego de GameCube (disco de EE.UU., GSWE64),
+hecho por recompilacion del programa original del juego.
+
+NO incluye ningun archivo del juego. Para jugar necesitas tu propia copia: la imagen del disco
+(.iso o .gcm, sin comprimir) sacada de tu propio disco.
+
+COMO JUGAR
+  1. Abri "Escuadron2" (Escuadron2.exe).
+  2. Elegi tu imagen del disco (o arrastrala sobre la ventana).
+  3. Toca "Jugar".
+
+DONDE QUEDAN TUS COSAS
+  En la carpeta del programa (o en %APPDATA%\Escuadron2 si esta instalado en Archivos de programa):
+    opciones, controles.ini, escuadron2_log.txt y cache de shaders
+    tarjetas\   tarjetas de memoria (partidas guardadas, formato .raw de Dolphin)
+    capturas\   capturas F12 (para mandar cuando algo se ve mal)
+  Imagenes\Escuadron2   fotos comunes (Mayus+F12)
+
+TECLAS MIENTRAS SE JUEGA
+  F11  pantalla completa        F10  4:3 / 16:9        F12  captura para reportar fallas
+  F1   menu de opciones             Mayus+F12  foto comun
+
+SI ALGO ANDA MAL
+  Manda el archivo escuadron2_log.txt (pestana Registros del launcher) y, si se ve raro, una captura F12.
+
+LICENCIAS (carpeta licencias)
+  El juego usa el interprete del DSP de Dolphin (GPL-2.0 o posterior), por eso escuadron2.exe se
+  distribuye bajo la GPL-2.0. SDL2 y zlib (licencia zlib), Dear ImGui (MIT), fuente Poppins (OFL).
+  Los nombres y marcas del juego original son de sus duenos; este proyecto no tiene relacion con ellos.

@@ -1,0 +1,10 @@
+# Opciones de escuadron2 (las mismas que en la linea de comandos). Copiar como escuadron2.ini
+# al lado de escuadron2.exe y sacar el '#' de las que se quieran usar.
+#
+# --pantalla-completa      arrancar en pantalla completa (F11 alterna)
+# --panoramico             16:9 (F10 alterna)
+# --escala 3               resolucion interna (2 por defecto; 3 o 4 para placas potentes)
+# --vsync                  sincronizar con el monitor
+# --sin-audio              sin sonido
+# --sin-vibracion          sin vibracion del joystick
+# --dsp-interprete         si el sonido falla o se cuelga, usar el DSP viejo (mas lento)

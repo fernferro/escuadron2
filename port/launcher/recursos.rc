@@ -1,0 +1,23 @@
+#include <winver.h>
+1 ICON "icono.ico"
+1 24 "manifiesto.xml"
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 0,1,0,0
+PRODUCTVERSION 0,1,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040A04B0"
+    BEGIN
+      VALUE "FileDescription", "Escuadron2 (port a PC): launcher"
+      VALUE "ProductName", "Escuadron2"
+      VALUE "FileVersion", "0.1.0"
+      VALUE "ProductVersion", "0.1.0"
+      VALUE "OriginalFilename", "Escuadron2.exe"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x040A, 1200
+  END
+END
