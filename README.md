@@ -8,15 +8,21 @@
 > Este proyecto no está relacionado con los dueños del juego, de sus marcas ni de la consola, ni
 > tiene su respaldo. Los nombres y marcas del juego original pertenecen a sus dueños.
 
-## Jugar (Windows)
+## ⬇️ Descargar y jugar (Windows)
 
-1. Bajá el zip del último [release](../../releases) y descomprimilo en una carpeta tuya
-   (por ejemplo `C:\Escuadron2`; no en "Archivos de programa").
-2. Abrí `Escuadron2.exe`, elegí la imagen de **tu** disco (`.iso` / `.gcm` sin comprimir) y tocá
-   **Prepare game**. La primera vez el launcher traduce y compila el juego **en tu PC**, a partir
-   de tu disco, con el compilador y el Python portables que vienen en `herramientas\`
-   (unos minutos, una sola vez). Nada del juego viene en el zip.
-3. Tocá **Play**.
+### [**Descargar Escuadron2 para Windows**](../../releases/latest/download/Escuadron2-windows.zip)
+
+1. Bajá el zip de arriba (o desde [Releases](../../releases/latest)).
+2. Clic derecho → **Extraer todo…** en una carpeta tuya (por ejemplo `C:\Escuadron2`; no en
+   "Archivos de programa"). No lo abras desde adentro del zip.
+3. Abrí `Escuadron2.exe`, elegí la imagen de **tu** disco (`GSWE64`, `.iso` / `.gcm` sin comprimir)
+   y tocá **Prepare game**. La primera vez el launcher arma el juego **en tu PC** a partir de tu
+   disco (unos minutos, una sola vez). Nada del juego viene en el zip.
+4. Tocá **Play**.
+
+**English:** download the zip above, extract it (right click → Extract All), open
+`Escuadron2.exe`, choose **your** `GSWE64` disc image, press **Prepare game** once (a few
+minutes) and then **Play**.
 
 ## Cómo funciona
 
